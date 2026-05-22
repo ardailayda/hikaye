@@ -1,0 +1,909 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Anılarımız</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Tenor+Sans&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --navy: #0a0f1e;
+      --navy2: #0c1430;
+      --navy3: #0d1a3a;
+      --silver: #c8d8f0;
+      --silver2: #a8c4e0;
+      --silver3: #8eaacf;
+      --silver4: #6a90b8;
+      --muted1: #5a7499;
+      --muted2: #4a6480;
+      --muted3: #3a5270;
+      --muted4: #2a3e58;
+      --muted5: #1a2a40;
+      --border: rgba(180,200,240,0.15);
+      --border2: rgba(180,200,240,0.3);
+      --border3: rgba(180,200,240,0.5);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      min-height: 100vh;
+      background: var(--navy);
+      font-family: 'Tenor Sans', sans-serif;
+      color: var(--silver);
+      overflow-x: hidden;
+    }
+
+    /* ─── STARS ─── */
+    #stars {
+      position: fixed; top: 0; left: 0;
+      width: 100%; height: 100%;
+      pointer-events: none;
+      z-index: 0;
+      background: radial-gradient(ellipse at 20% 50%, #0d1a3a 0%, var(--navy) 70%);
+    }
+    .star {
+      position: absolute;
+      width: 2px; height: 2px;
+      background: var(--silver);
+      border-radius: 50%;
+      animation: twinkle 3s infinite;
+    }
+    .star.lg { width: 3px; height: 3px; }
+    @keyframes twinkle {
+      0%, 100% { opacity: 0.15; }
+      50% { opacity: 0.9; }
+    }
+
+    /* ─── LOCK SCREEN ─── */
+    #lockScreen {
+      position: fixed; inset: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: opacity 0.8s ease;
+    }
+    #lockScreen.hiding { opacity: 0; pointer-events: none; }
+
+    .lock-card {
+      background: rgba(12, 20, 48, 0.88);
+      border: 0.5px solid rgba(180, 200, 240, 0.22);
+      border-radius: 24px;
+      padding: 52px 48px 44px;
+      width: 380px;
+      max-width: calc(100vw - 40px);
+      text-align: center;
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      animation: fadeUp 0.9s cubic-bezier(.22,.68,0,1.2) both;
+    }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(32px) scale(0.97); }
+      to   { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    .lock-deco {
+      width: 60px; height: 60px;
+      border: 0.5px solid rgba(180,200,240,0.28);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 30px;
+      position: relative;
+    }
+    .lock-deco::before {
+      content: '';
+      position: absolute; inset: -7px;
+      border-radius: 50%;
+      border: 0.5px solid rgba(180,200,240,0.1);
+    }
+    .lock-deco::after {
+      content: '';
+      position: absolute; inset: -14px;
+      border-radius: 50%;
+      border: 0.5px solid rgba(180,200,240,0.05);
+    }
+    .lock-deco i { font-size: 24px; color: var(--muted1); }
+
+    .lock-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 30px;
+      font-weight: 300;
+      font-style: italic;
+      color: #d4e4f8;
+      letter-spacing: 0.03em;
+      margin-bottom: 8px;
+    }
+    .lock-sub {
+      font-size: 11px;
+      color: var(--muted2);
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      margin-bottom: 40px;
+    }
+
+    .lock-input-wrap {
+      position: relative;
+      margin-bottom: 14px;
+    }
+    .lock-input {
+      width: 100%;
+      background: rgba(255,255,255,0.04);
+      border: 0.5px solid rgba(180,200,240,0.2);
+      border-radius: 14px;
+      padding: 15px 48px 15px 20px;
+      font-family: 'Tenor Sans', sans-serif;
+      font-size: 20px;
+      letter-spacing: 0.35em;
+      color: var(--silver);
+      text-align: center;
+      outline: none;
+      transition: border-color 0.3s, background 0.3s;
+      -webkit-appearance: none;
+    }
+    .lock-input:focus {
+      border-color: rgba(180,200,240,0.48);
+      background: rgba(255,255,255,0.07);
+    }
+    .lock-input.error {
+      border-color: rgba(220, 110, 110, 0.65);
+      animation: shake 0.45s ease;
+    }
+    @keyframes shake {
+      0%,100% { transform: translateX(0); }
+      20% { transform: translateX(-9px); }
+      60% { transform: translateX(9px); }
+      80% { transform: translateX(-4px); }
+    }
+
+    .eye-btn {
+      position: absolute; right: 15px; top: 50%;
+      transform: translateY(-50%);
+      background: none; border: none; cursor: pointer;
+      color: var(--muted2); font-size: 18px; padding: 5px;
+      transition: color 0.2s;
+      line-height: 1;
+    }
+    .eye-btn:hover { color: var(--silver3); }
+
+    .lock-btn {
+      width: 100%;
+      background: rgba(100, 140, 200, 0.12);
+      border: 0.5px solid rgba(180, 200, 240, 0.32);
+      border-radius: 14px;
+      padding: 15px;
+      font-family: 'Tenor Sans', sans-serif;
+      font-size: 12px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--silver2);
+      cursor: pointer;
+      transition: all 0.3s;
+      margin-bottom: 16px;
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+    }
+    .lock-btn:hover {
+      background: rgba(100, 140, 200, 0.26);
+      border-color: rgba(180,200,240,0.55);
+      color: #d4e4f8;
+      transform: translateY(-1px);
+    }
+    .lock-btn:active { transform: translateY(0); }
+    .lock-btn i { font-size: 15px; }
+
+    .lock-hint {
+      font-size: 11px;
+      color: var(--muted4);
+      letter-spacing: 0.1em;
+      transition: color 0.4s;
+      min-height: 16px;
+    }
+    .lock-hint.shown { color: var(--muted2); }
+    .lock-hint.error-msg { color: rgba(220,110,110,0.7); }
+
+    /* ─── TOAST ─── */
+    #toast {
+      position: fixed;
+      bottom: 90px; right: 32px;
+      background: rgba(8,18,50,0.95);
+      border: 0.5px solid rgba(180,200,240,0.28);
+      border-radius: 14px;
+      padding: 13px 20px;
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      color: var(--silver2);
+      z-index: 200;
+      opacity: 0;
+      transform: translateY(10px);
+      transition: opacity 0.3s, transform 0.3s;
+      pointer-events: none;
+      backdrop-filter: blur(16px);
+      display: flex; align-items: center; gap: 8px;
+    }
+    #toast.show { opacity: 1; transform: translateY(0); }
+    #toast.success { color: #7ecfa8; border-color: rgba(100,200,140,0.38); }
+    #toast.error-t { color: #e08080; border-color: rgba(220,110,110,0.38); }
+
+    /* ─── MAIN PAGE ─── */
+    #mainPage {
+      position: relative;
+      z-index: 10;
+      opacity: 0;
+      transition: opacity 0.9s ease;
+      display: none;
+    }
+    #mainPage.visible { display: block; }
+    #mainPage.shown { opacity: 1; }
+
+    /* ─── HEADER ─── */
+    .site-header {
+      text-align: center;
+      padding: 80px 24px 52px;
+    }
+    .header-line-top {
+      width: 44px; height: 0.5px;
+      background: rgba(180,200,240,0.25);
+      margin: 0 auto 36px;
+    }
+    .site-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 56px;
+      font-weight: 300;
+      font-style: italic;
+      color: #d4e4f8;
+      letter-spacing: 0.04em;
+      margin-bottom: 18px;
+      line-height: 1.1;
+    }
+    .site-date {
+      font-size: 10px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--muted1);
+      margin-bottom: 14px;
+    }
+    .site-subtitle {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-size: 18px;
+      color: var(--silver4);
+      font-weight: 300;
+      letter-spacing: 0.02em;
+    }
+    .header-ornament {
+      margin: 36px auto 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+    }
+    .orn-line {
+      width: 64px; height: 0.5px;
+      background: rgba(180,200,240,0.18);
+    }
+    .orn-dot {
+      width: 4px; height: 4px;
+      border-radius: 50%;
+      background: rgba(180,200,240,0.38);
+    }
+
+    /* ─── GRID ─── */
+    .memories-grid {
+      max-width: 1160px;
+      margin: 0 auto;
+      padding: 8px 36px 80px;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 28px;
+    }
+
+    @media (max-width: 900px) {
+      .memories-grid { grid-template-columns: repeat(2, 1fr); padding: 8px 20px 60px; gap: 20px; }
+      .site-title { font-size: 40px; }
+    }
+    @media (max-width: 580px) {
+      .memories-grid { grid-template-columns: 1fr; }
+      .site-title { font-size: 32px; }
+      .lock-card { padding: 40px 28px 36px; }
+    }
+
+    .memory-card {
+      background: rgba(12, 20, 48, 0.58);
+      border: 0.5px solid var(--border);
+      border-radius: 20px;
+      overflow: hidden;
+      transition: transform 0.4s cubic-bezier(.22,.68,0,1.2), border-color 0.4s, box-shadow 0.4s;
+      animation: cardIn 0.7s ease both;
+    }
+    .memory-card:nth-child(1) { animation-delay: 0.08s; }
+    .memory-card:nth-child(2) { animation-delay: 0.16s; }
+    .memory-card:nth-child(3) { animation-delay: 0.24s; }
+    .memory-card:nth-child(4) { animation-delay: 0.32s; }
+    .memory-card:nth-child(5) { animation-delay: 0.40s; }
+    .memory-card:nth-child(6) { animation-delay: 0.48s; }
+    @keyframes cardIn {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .memory-card:hover {
+      transform: translateY(-7px);
+      border-color: rgba(180,200,240,0.32);
+      box-shadow: 0 24px 64px rgba(0,0,0,0.45), 0 0 0 0.5px rgba(180,200,240,0.08);
+    }
+
+    /* ─── PHOTO AREA ─── */
+    .photo-area {
+      width: 100%;
+      aspect-ratio: 4 / 3;
+      background: rgba(18, 30, 65, 0.75);
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .photo-area img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      display: none;
+      transition: transform 0.5s ease;
+    }
+    .photo-area img.has-photo { display: block; }
+    .memory-card:hover .photo-area img { transform: scale(1.05); }
+
+    .photo-placeholder {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      opacity: 0.45;
+      transition: opacity 0.3s;
+      pointer-events: none;
+    }
+    .photo-placeholder i { font-size: 30px; color: var(--muted1); }
+    .photo-placeholder span {
+      font-size: 10px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--muted2);
+    }
+    .photo-area:hover .photo-placeholder { opacity: 0.75; }
+
+    /* uploading overlay */
+    .upload-overlay {
+      position: absolute; inset: 0;
+      background: rgba(8,16,40,0.75);
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      z-index: 4;
+    }
+    .upload-overlay.active { display: flex; }
+    .upload-overlay span {
+      font-size: 10px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--silver3);
+    }
+    .spinner {
+      width: 28px; height: 28px;
+      border: 2px solid rgba(180,200,240,0.15);
+      border-top-color: var(--silver3);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .photo-upload-input {
+      position: absolute; inset: 0;
+      opacity: 0;
+      cursor: pointer;
+      width: 100%; height: 100%;
+    }
+
+    .photo-num {
+      position: absolute; top: 12px; left: 14px;
+      font-size: 10px;
+      letter-spacing: 0.16em;
+      color: rgba(200,216,240,0.4);
+      z-index: 3;
+      pointer-events: none;
+    }
+
+    .remove-btn {
+      position: absolute; top: 10px; right: 10px;
+      width: 30px; height: 30px;
+      background: rgba(0,0,0,0.55);
+      border: 0.5px solid rgba(255,255,255,0.12);
+      border-radius: 50%;
+      display: none;
+      align-items: center; justify-content: center;
+      cursor: pointer;
+      z-index: 5;
+      transition: background 0.25s;
+      color: var(--silver);
+      font-size: 13px;
+    }
+    .remove-btn:hover { background: rgba(180,60,60,0.55); }
+    .photo-area:hover .remove-btn.active { display: flex; }
+
+    /* ─── TEXT AREA ─── */
+    .card-body { padding: 20px 22px 24px; }
+    .card-label {
+      font-size: 9px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--muted3);
+      margin-bottom: 11px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .card-label::after {
+      content: '';
+      flex: 1;
+      height: 0.5px;
+      background: rgba(180,200,240,0.08);
+    }
+    .card-textarea {
+      width: 100%;
+      background: transparent;
+      border: none;
+      outline: none;
+      resize: none;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 15.5px;
+      font-style: italic;
+      font-weight: 300;
+      color: var(--muted1);
+      line-height: 1.75;
+      min-height: 80px;
+      transition: color 0.3s;
+      overflow: hidden;
+    }
+    .card-textarea:focus { color: #b8d0e8; }
+    .card-textarea::placeholder { color: var(--muted4); font-style: italic; }
+
+    /* ─── FOOTER ─── */
+    .site-footer {
+      text-align: center;
+      padding: 0 24px 68px;
+    }
+    .footer-orn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 22px;
+    }
+    .footer-text {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-size: 16px;
+      color: var(--muted3);
+      letter-spacing: 0.04em;
+    }
+
+    /* ─── SAVE BAR ─── */
+    .save-bar {
+      position: fixed;
+      bottom: 28px; right: 32px;
+      z-index: 50;
+    }
+    .save-btn {
+      background: rgba(8, 18, 50, 0.92);
+      border: 0.5px solid rgba(180,200,240,0.32);
+      border-radius: 40px;
+      padding: 14px 28px;
+      font-family: 'Tenor Sans', sans-serif;
+      font-size: 11px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--silver2);
+      cursor: pointer;
+      transition: all 0.3s;
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      display: flex; align-items: center; gap: 9px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+    }
+    .save-btn:hover {
+      background: rgba(16, 36, 90, 0.95);
+      border-color: rgba(180,200,240,0.55);
+      color: #d4e4f8;
+      transform: translateY(-2px);
+      box-shadow: 0 12px 40px rgba(0,0,0,0.5);
+    }
+    .save-btn:active { transform: translateY(0); }
+    .save-btn i { font-size: 15px; }
+    .save-btn.saved { color: #7ecfa8; border-color: rgba(100,200,140,0.38); }
+  </style>
+</head>
+<body>
+
+<div id="stars"></div>
+
+<!-- ══ TOAST ══ -->
+<div id="toast"><i class="ti ti-info-circle"></i><span id="toastMsg"></span></div>
+
+<!-- ══ LOCK SCREEN ══ -->
+<div id="lockScreen">
+  <div class="lock-card">
+    <div class="lock-deco">
+      <i class="ti ti-lock"></i>
+    </div>
+    <div class="lock-title">Anılarımız</div>
+    <div class="lock-sub">Yalnızca sana özel</div>
+
+    <div class="lock-input-wrap">
+      <input
+        class="lock-input"
+        type="password"
+        id="pwInput"
+        placeholder="••••••••"
+        maxlength="12"
+        autocomplete="off"
+        inputmode="numeric"
+      />
+      <button class="eye-btn" id="eyeBtn" aria-label="Şifreyi göster/gizle">
+        <i class="ti ti-eye-off" id="eyeIcon"></i>
+      </button>
+    </div>
+
+    <button class="lock-btn" id="enterBtn">
+      <i class="ti ti-arrow-right"></i> Gir
+    </button>
+    <div class="lock-hint" id="lockHint">Tanışma tarihimiz ✦</div>
+  </div>
+</div>
+
+<!-- ══ MAIN PAGE ══ -->
+<div id="mainPage">
+  <header class="site-header">
+    <div class="header-line-top"></div>
+    <h1 class="site-title">Bizim Anılarımız</h1>
+    <div class="site-date">25 Aralık 2025 &nbsp;✦&nbsp; Başlangıcımız</div>
+    <p class="site-subtitle">Her kare, bir nefes. Her söz, bir hatıra.</p>
+    <div class="header-ornament">
+      <div class="orn-line"></div>
+      <div class="orn-dot"></div>
+      <div class="orn-line"></div>
+    </div>
+  </header>
+
+  <main class="memories-grid" id="memoriesGrid"></main>
+
+  <footer class="site-footer">
+    <div class="footer-orn">
+      <div class="orn-line"></div>
+      <div class="orn-dot"></div>
+      <div class="orn-dot" style="background:rgba(180,200,240,0.18)"></div>
+      <div class="orn-dot"></div>
+      <div class="orn-line"></div>
+    </div>
+    <p class="footer-text">Seninle her an, bir şiir gibi.</p>
+  </footer>
+
+  <div class="save-bar">
+    <button class="save-btn" id="saveBtn">
+      <i class="ti ti-device-floppy"></i>
+      Anıları Kaydet
+    </button>
+  </div>
+</div>
+
+<script>
+  /* ═══════════════════════════════════════════════
+     AYARLAR
+  ═══════════════════════════════════════════════ */
+  const PASSWORD_HASH = '3015b68fefb97127f6ac13b0addbbee31c1d48fe66db6776613733702917232a';
+  const IMGBB_KEY     = '1f7512c4e93b97e01139531acb292594';
+  const JSONBIN_KEY   = '$2a$10$fRBborDYPXDOWCDVwy.G2u.CVCyMlQ8F2Cls.aeYAuA8hg5QfQoIC';
+  const JSONBIN_NAME  = 'AnilarsayfasiV1';
+
+  const LABELS = ['İlk anımız','Sevgilim','Birlikte','Hatıralar','Biz','Özel an'];
+  const PLACEHOLDERS = [
+    'Bu anı hep aklımda kalacak...',
+    'Seninle her şey daha güzel...',
+    'O gün hiç unutmadım...',
+    'Gözlerine baktığımda...',
+    'Bu kareye bakmak yeterli...',
+    'Seninle geçirdiğimiz o zaman...'
+  ];
+
+  // JSONBin bin ID'si — ilk kayıtta otomatik oluşur ve saklanır
+  const BIN_ID = '6a10d6316877513b27b8c955';
+
+  /* ═══ Stars ═══ */
+  (function() {
+    const c = document.getElementById('stars');
+    for (let i = 0; i < 100; i++) {
+      const s = document.createElement('div');
+      s.className = 'star' + (Math.random() > 0.72 ? ' lg' : '');
+      s.style.cssText =
+        'left:' + (Math.random()*100) + '%;' +
+        'top:' + (Math.random()*100) + '%;' +
+        'animation-delay:' + (Math.random()*5) + 's;' +
+        'animation-duration:' + (2 + Math.random()*4) + 's;' +
+        'opacity:' + (Math.random()*0.4 + 0.08);
+      c.appendChild(s);
+    }
+  })();
+
+  /* ═══ Toast ═══ */
+  function showToast(msg, type) {
+    const t = document.getElementById('toast');
+    const m = document.getElementById('toastMsg');
+    t.className = 'show ' + (type || '');
+    m.textContent = msg;
+    clearTimeout(t._timer);
+    t._timer = setTimeout(function() { t.className = ''; }, 3200);
+  }
+
+  /* ═══ Lock ═══ */
+  const pwInput   = document.getElementById('pwInput');
+  const eyeBtn    = document.getElementById('eyeBtn');
+  const eyeIcon   = document.getElementById('eyeIcon');
+  const lockHint  = document.getElementById('lockHint');
+  const enterBtn  = document.getElementById('enterBtn');
+  const lockScreen= document.getElementById('lockScreen');
+
+  eyeBtn.addEventListener('click', function() {
+    if (pwInput.type === 'password') {
+      pwInput.type = 'text';
+      eyeIcon.className = 'ti ti-eye';
+    } else {
+      pwInput.type = 'password';
+      eyeIcon.className = 'ti ti-eye-off';
+    }
+  });
+  pwInput.addEventListener('input', function() {
+    lockHint.classList.add('shown');
+    lockHint.classList.remove('error-msg');
+    lockHint.textContent = 'Tanışma tarihimiz ✦';
+  });
+  pwInput.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') tryUnlock();
+  });
+  enterBtn.addEventListener('click', function() { tryUnlock(); });
+
+  async function tryUnlock() {
+    const enc = new TextEncoder().encode(pwInput.value);
+    const buf = await crypto.subtle.digest('SHA-256', enc);
+    const hash = Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2,'0')).join('');
+    if (hash === PASSWORD_HASH) {
+      lockScreen.classList.add('hiding');
+      setTimeout(function() {
+        lockScreen.style.display = 'none';
+        const mp = document.getElementById('mainPage');
+        mp.style.display = 'block';
+        setTimeout(function() { mp.classList.add('visible', 'shown'); }, 30);
+        buildGrid();
+      }, 820);
+    } else {
+      pwInput.classList.add('error');
+      lockHint.classList.add('error-msg');
+      lockHint.textContent = 'Hatalı tarih, tekrar dene...';
+      setTimeout(function() {
+        pwInput.classList.remove('error');
+        pwInput.value = '';
+      }, 460);
+      setTimeout(function() {
+        lockHint.classList.remove('error-msg');
+        lockHint.textContent = 'Tanışma tarihimiz ✦';
+      }, 2200);
+    }
+  }
+
+  /* ═══════════════════════════════════════════════
+     JSONBin — Veri Yükleme / Kaydetme
+  ═══════════════════════════════════════════════ */
+
+  async function loadFromCloud() {
+    if (!BIN_ID) return null;
+    try {
+      const res = await fetch('https://api.jsonbin.io/v3/b/' + BIN_ID + '/latest', {
+        headers: { 'X-Master-Key': JSONBIN_KEY }
+      });
+      if (!res.ok) return null;
+      const json = await res.json();
+      return json.record || null;
+    } catch(e) { return null; }
+  }
+
+  async function saveToCloud(data) {
+    const res = await fetch('https://api.jsonbin.io/v3/b/' + BIN_ID, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Master-Key': JSONBIN_KEY
+      },
+      body: JSON.stringify(data)
+    });
+    if (!res.ok) throw new Error('Güncellenemedi');
+  }
+
+  /* ═══════════════════════════════════════════════
+     ImgBB — Fotoğraf Yükleme
+  ═══════════════════════════════════════════════ */
+
+  async function uploadToImgBB(file) {
+    const formData = new FormData();
+    formData.append('image', file);
+    const res = await fetch('https://api.imgbb.com/1/upload?key=' + IMGBB_KEY, {
+      method: 'POST',
+      body: formData
+    });
+    if (!res.ok) throw new Error('ImgBB yükleme hatası');
+    const json = await res.json();
+    return json.data.url; // kalıcı URL
+  }
+
+  /* ═══════════════════════════════════════════════
+     Grid Oluşturma
+  ═══════════════════════════════════════════════ */
+
+  // Anlık veri (fotoğraf URL'leri + notlar)
+  let memoryData = {};
+
+  async function buildGrid() {
+    const grid = document.getElementById('memoriesGrid');
+    grid.innerHTML = '';
+
+    // Önce boş kartları yap, sonra veriyi yükle
+    for (let i = 0; i < 6; i++) {
+      const card = document.createElement('div');
+      card.className = 'memory-card';
+      card.innerHTML =
+        '<div class="photo-area" id="pa' + i + '">' +
+          '<span class="photo-num">0' + (i+1) + '</span>' +
+          '<img id="img' + i + '" alt="Anı ' + (i+1) + '" />' +
+          '<div class="photo-placeholder" id="pp' + i + '">' +
+            '<i class="ti ti-camera-plus"></i>' +
+            '<span>Fotoğraf ekle</span>' +
+          '</div>' +
+          '<div class="upload-overlay" id="ov' + i + '">' +
+            '<div class="spinner"></div>' +
+            '<span>Yükleniyor...</span>' +
+          '</div>' +
+          '<input type="file" class="photo-upload-input" accept="image/*"' +
+            ' id="fu' + i + '" data-idx="' + i + '" title="Fotoğraf ekle" />' +
+          '<button class="remove-btn" id="rb' + i + '" data-idx="' + i + '" title="Fotoğrafı kaldır">' +
+            '<i class="ti ti-x"></i>' +
+          '</button>' +
+        '</div>' +
+        '<div class="card-body">' +
+          '<div class="card-label">' + LABELS[i] + '</div>' +
+          '<textarea class="card-textarea" id="ta' + i + '"' +
+            ' placeholder="' + PLACEHOLDERS[i] + '"' +
+            ' data-idx="' + i + '"></textarea>' +
+        '</div>';
+      grid.appendChild(card);
+    }
+
+    // Buluttan veriyi yükle
+    showToast('Anılar yükleniyor...', '');
+    const cloud = await loadFromCloud();
+    if (cloud) {
+      memoryData = cloud;
+    }
+
+    // Kartları doldur
+    for (let i = 0; i < 6; i++) {
+      const d = memoryData[i] || {};
+      if (d.photo) {
+        const img = document.getElementById('img' + i);
+        img.src = d.photo;
+        img.classList.add('has-photo');
+        document.getElementById('pp' + i).style.display = 'none';
+        document.getElementById('rb' + i).classList.add('active');
+      }
+      const ta = document.getElementById('ta' + i);
+      if (d.text) {
+        ta.value = d.text;
+        ta.style.height = 'auto';
+        ta.style.height = ta.scrollHeight + 'px';
+      }
+    }
+
+    if (cloud) showToast('Anılar yüklendi ✦', 'success');
+    else showToast('Henüz anı eklenmemiş, başlayalım ✦', '');
+
+    // Event listener'lar
+    for (let i = 0; i < 6; i++) {
+      (function(idx) {
+        // Fotoğraf yükle
+        document.getElementById('fu' + idx).addEventListener('change', async function() {
+          const file = this.files[0];
+          if (!file) return;
+
+          // Overlay göster
+          const ov = document.getElementById('ov' + idx);
+          ov.classList.add('active');
+          // File input'u disable et (çift tıklamayı önle)
+          this.disabled = true;
+
+          try {
+            const url = await uploadToImgBB(file);
+            if (!memoryData[idx]) memoryData[idx] = {};
+            memoryData[idx].photo = url;
+
+            const img = document.getElementById('img' + idx);
+            img.src = url;
+            img.classList.add('has-photo');
+            document.getElementById('pp' + idx).style.display = 'none';
+            document.getElementById('rb' + idx).classList.add('active');
+            showToast('Fotoğraf yüklendi ✦', 'success');
+          } catch(e) {
+            showToast('Fotoğraf yüklenemedi, tekrar dene', 'error-t');
+          }
+
+          ov.classList.remove('active');
+          this.disabled = false;
+          this.value = '';
+        });
+
+        // Fotoğraf kaldır
+        document.getElementById('rb' + idx).addEventListener('click', function(e) {
+          e.stopPropagation();
+          const img = document.getElementById('img' + idx);
+          img.src = '';
+          img.classList.remove('has-photo');
+          document.getElementById('pp' + idx).style.display = '';
+          this.classList.remove('active');
+          if (memoryData[idx]) memoryData[idx].photo = '';
+        });
+
+        // Textarea
+        const ta = document.getElementById('ta' + idx);
+        ta.addEventListener('input', function() {
+          this.style.height = 'auto';
+          this.style.height = this.scrollHeight + 'px';
+          if (!memoryData[idx]) memoryData[idx] = {};
+          memoryData[idx].text = this.value;
+        });
+      })(i);
+    }
+  }
+
+  /* ═══ Kaydet butonu ═══ */
+  document.getElementById('saveBtn').addEventListener('click', async function() {
+    const btn = this;
+    btn.disabled = true;
+    btn.innerHTML = '<i class="ti ti-loader"></i> Kaydediliyor...';
+
+    // Textarea değerlerini memoryData'ya aktar
+    for (let i = 0; i < 6; i++) {
+      const ta = document.getElementById('ta' + i);
+      if (ta) {
+        if (!memoryData[i]) memoryData[i] = {};
+        memoryData[i].text = ta.value;
+      }
+    }
+
+    try {
+      await saveToCloud(memoryData);
+      btn.classList.add('saved');
+      btn.innerHTML = '<i class="ti ti-check"></i> Kaydedildi';
+      showToast('Anılar buluta kaydedildi ✦', 'success');
+      setTimeout(function() {
+        btn.innerHTML = '<i class="ti ti-device-floppy"></i> Anıları Kaydet';
+        btn.classList.remove('saved');
+        btn.disabled = false;
+      }, 2400);
+    } catch(e) {
+      btn.innerHTML = '<i class="ti ti-device-floppy"></i> Anıları Kaydet';
+      btn.disabled = false;
+      showToast('Kayıt hatası, tekrar dene', 'error-t');
+    }
+  });
+</script>
+</body>
+</html>
